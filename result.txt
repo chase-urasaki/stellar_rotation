@@ -1,0 +1,1 @@
+TIC P_acf P_upper_acf P_lower_acf P_ls  P_upper_ls P_lower_ls Amplitude
