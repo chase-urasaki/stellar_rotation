@@ -226,9 +226,6 @@ def acf(t,x):
     #plt.plot([5.1,5.1],[0,0.0004])
     plt.savefig('plots/'+desig+'_acf.pdf')
 
-
-
-
     plt.close('all')
     fig = plt.figure()
     plt.figure(figsize=(8,4))
@@ -418,7 +415,10 @@ newdata = pd.read_csv('list.txt', header = None, sep='\s+', names=["epic"])#,"ca
 epic = np.array(newdata['epic'],'str')
 #cam = np.array(newdata['cam'],'str')
 #can_test = np.array(newdata['can'],'i')
-can_test = np.ones(len(epic),'i')
+#can_test = np.ones(len(epic),'i')
+# Set can_test false for now to just run
+can_test = np.zeros(len(epic),'i')
+
 ###print epic
 
 txt_file = open('result.txt','w')
@@ -431,7 +431,7 @@ for i in range(0,len(epic)):#len(epic)
     if os.path.exists(file) == False:
         print('missing ', file)
         continue
-    newdata = pd.read_csv('./lc/raw/'+epic[i]+'.txt', sep='\s+', header = 0, names=["Time", "Flux"])
+    newdata = pd.read_csv('./lc/raw/'+epic[i]+'.txt', sep=',', header = 0, names=["Time", "Flux"])
     #newdata = pd.read_csv('../lc/raw/'+epic[i]+'.txt', header = None, names=["index","Time", "Flux"])
     #newdata = pd.read_table('data/hlsp_k2sff_k2_lightcurve_'+epic[i]+'-'+str(cam[i])+'_kepler_v1_llc-default-aper.txt', sep=',', header = 0, names=["Time", "Flux", "tmp"])
     ###print newdata
