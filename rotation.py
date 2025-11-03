@@ -416,6 +416,7 @@ epic = np.array(newdata['epic'],'str')
 #cam = np.array(newdata['cam'],'str')
 #can_test = np.array(newdata['can'],'i')
 #can_test = np.ones(len(epic),'i')
+
 # Set can_test false for now to just run
 can_test = np.zeros(len(epic),'i')
 

@@ -4,7 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 #%% 
-search = lk.search_lightcurve('TOI 6109')
+TARGET = 'TOI 6109'
+#%%
+search = lk.search_lightcurve(TARGET)
 #%%
 search
 #%% 
@@ -23,17 +25,17 @@ flux = ls.flux.value
 
 df = pd.DataFrame({'Time': time, 'Flux': flux})
 
-df.to_csv('384984325.txt', index = False)
+df.to_csv('lc/raw/105840719.txt', index = False)
 # %%
 # Okay, so there are a bunch of of 0 values 
 # %%
 # Try gyro interp 
 from gyrointerp import gyro_age_posterior
 
-Prot = 3.1944784409461136
-Prot_err = 0.5555614679906284
+Prot = 5.763533783432416
+Prot_err = 0.61827224641155
 
-Teff, Teff_err = 5660, 100
+Teff, Teff_err = 5432, 125
 
 # Unifrom grid between 0 and 1000 Myr
 age_grid = np.linspace(0, 1000, 500)
@@ -56,9 +58,25 @@ fig, ax = plt.subplots()
 ax.plot(age_grid, 1e3*age_poster, c = 'k', lw = 0.8)
 ax.update({
     'xlabel': 'Age [Myr]',
-    'ylabel': r'Probablility ($10^{-3}\$Myr$^{-1}$)',
+    'ylabel': r'Probablility ($10^{-3}$Myr$^{-1}$)',
     'title': f'P_rot = {Prot} days, Teff = {Teff} K',
     'xlim': [0, 1000]
 })
+# Plt the maximum value 
+plt.axvline(result['median'], ls = '--', c = 'C1', label = 'Median Age')
+plt.text(result['median'] + 20, ax.get_ylim()[1]*0.8, f"{result['median']:.0f} Myr", color = 'C1')\
+
+# Plot the error bars on this 
+plt.fill_betweenx(
+    y = ax.get_ylim(),
+    x1 = result['median'] - result['-1sigma'],
+    x2 = result['median'] + result['+1sigma'],
+    color = 'C1',
+    alpha = 0.3,
+    label = '1$\sigma$ Interval'
+)
+plt.text()
+# Label the target star as a text box off to the side
+plt.text(800, ax.get_ylim()[1]*0.9, TARGET, fontsize = 12, bbox = dict(facecolor = 'white', edgecolor = 'black'))
 plt.show()
 # %%
