@@ -4,13 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 #%% 
-TARGET = 'TOI 6109'
+TARGET = 'TOI 1268'
 #%%
 search = lk.search_lightcurve(TARGET)
 #%%
 search
 #%% 
-ls = search[0].download()
+ls = search[2].download()
 
 #%% Save lightcurve to 
 #%%%
@@ -25,17 +25,17 @@ flux = ls.flux.value
 
 df = pd.DataFrame({'Time': time, 'Flux': flux})
 
-df.to_csv('lc/raw/105840719.txt', index = False)
+df.to_csv('lc/raw/142394656.txt', index = False)
 # %%
 # Okay, so there are a bunch of of 0 values 
 # %%
 # Try gyro interp 
 from gyrointerp import gyro_age_posterior
 
-Prot = 5.763533783432416
-Prot_err = 0.61827224641155
+Prot = 3.1944784409461136  
+Prot_err = 0.5555614679906284
 
-Teff, Teff_err = 5432, 125
+Teff, Teff_err = 5660,100
 
 # Unifrom grid between 0 and 1000 Myr
 age_grid = np.linspace(0, 1000, 500)
@@ -59,23 +59,20 @@ ax.plot(age_grid, 1e3*age_poster, c = 'k', lw = 0.8)
 ax.update({
     'xlabel': 'Age [Myr]',
     'ylabel': r'Probablility ($10^{-3}$Myr$^{-1}$)',
-    'title': f'P_rot = {Prot} days, Teff = {Teff} K',
+    'title': f'P_rot = {Prot:.3f} days, Teff = {Teff} K',
     'xlim': [0, 1000]
 })
 # Plt the maximum value 
 plt.axvline(result['median'], ls = '--', c = 'C1', label = 'Median Age')
 plt.text(result['median'] + 20, ax.get_ylim()[1]*0.8, f"{result['median']:.0f} Myr", color = 'C1')\
 
-# Plot the error bars on this 
-plt.fill_betweenx(
-    y = ax.get_ylim(),
-    x1 = result['median'] - result['-1sigma'],
-    x2 = result['median'] + result['+1sigma'],
-    color = 'C1',
-    alpha = 0.3,
-    label = '1$\sigma$ Interval'
-)
-plt.text()
+# Plot the error bars 
+plt.axvline(result['median'] - result['-1sigma'], ls = ':', c = 'C1')
+plt.text(result['median'] - result['-1sigma'] - 100, ax.get_ylim()[1]*0.6, f"-{result['-1sigma']:.0f} Myr", color = 'C1')
+
+plt.axvline(result['median'] + result['+1sigma'], ls = ':', c = 'C1')
+plt.text(result['median'] + result['+1sigma'] + 20, ax.get_ylim()[1]*0.6, f"+{result['+1sigma']:.0f} Myr", color = 'C1')
+
 # Label the target star as a text box off to the side
 plt.text(800, ax.get_ylim()[1]*0.9, TARGET, fontsize = 12, bbox = dict(facecolor = 'white', edgecolor = 'black'))
 plt.show()
