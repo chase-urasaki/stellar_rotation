@@ -4,13 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 #%% 
-TARGET = 'TOI 1268'
+TARGET = 'TOI 5082'
 #%%
 search = lk.search_lightcurve(TARGET)
 #%%
 search
 #%% 
-ls = search[2].download()
+ls = search[6].download()
 
 #%% Save lightcurve to 
 #%%%
@@ -25,7 +25,7 @@ flux = ls.flux.value
 
 df = pd.DataFrame({'Time': time, 'Flux': flux})
 
-df.to_csv('lc/raw/142394656.txt', index = False)
+df.to_csv('lc/raw/437011608.txt', index = False)
 # %%
 # Okay, so there are a bunch of of 0 values 
 # %%
